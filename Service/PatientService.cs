@@ -1,10 +1,11 @@
-using Hospital_Management_System.Model;
-using Hospital_Management_System.UnitOfWork;
+using HospitalManagementSystemAPIVersion.UnitOfWork;
+using HospitalManagementSystemAPIVersion.DTO.PatientDTOs;
+using HospitalManagementSystemAPIVersion.Model;
+using HospitalManagementSystemAPIVersion.DTO;
 
-using Hospital_Management_System.Model.DTO.patientDTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hospital_Management_System.Model.Service;
+namespace HospitalManagementSystemAPIVersion.Service;
 
 public class PatientService
 {
@@ -15,78 +16,62 @@ public class PatientService
         _unitOfWork = unitOfWork;
     }
 
-    // ================= Add Patient =================
-    public async Task AddAsync(CreatePatientDto dto)
+    public async Task<PatientDto> AddAsync(CreatePatientDto dto)
     {
         var patient = new Patient(dto.Name, dto.Phone);
+
         await _unitOfWork.Patients.AddAsync(patient);
         await _unitOfWork.SaveChangesAsync();
+
+        return new PatientDto
+        {
+            Id = patient.Id,
+            Name = patient.Name,
+            Phone = patient.Phone
+        };
     }
 
-    // ================= Get By Id =================
-    public async Task<Patient> GetByIdAsync(int id)
+    public async Task<PatientDto> GetByIdAsync(int id)
     {
         var patient = await _unitOfWork.Patients.GetByIdAsync(id);
+
         if (patient == null)
-            throw new Exception("Patient not found");
-        return patient;
+            throw new KeyNotFoundException("Patient not found");
+
+        return new PatientDto
+        {
+            Id = patient.Id,
+            Name = patient.Name,
+            Phone = patient.Phone
+        };
     }
 
-    // ================= Update Patient =================
-    public async Task UpdateAsync(UpdatePatientDto dto)
-    {
-        var patient = await _unitOfWork.Patients.GetByIdAsync(dto.Id);
-        if (patient == null)
-            throw new Exception("Patient not found");
-
-        patient.SetName(dto.Name);
-        patient.SetPhone(dto.Phone);
-
-        await _unitOfWork.Patients.UpdateAsync(patient);
-        await _unitOfWork.SaveChangesAsync();
-    }
-
-    // ================= Delete Patient =================
     public async Task DeleteAsync(int id)
     {
         var patient = await _unitOfWork.Patients.GetByIdAsync(id);
+
         if (patient == null)
-            throw new Exception("Patient not found");
+            throw new KeyNotFoundException("Patient not found");
 
         await _unitOfWork.Patients.RemoveAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
 
-    // ================= Get All =================
-    public async Task<List<Patient>> GetAllAsync()
+    public async Task<PagedResult<PatientDto>> GetPageAsync(PatientQueryDto dto)
     {
-        return await _unitOfWork.Patients.GetAllAsync();
-    }
+        var query = _unitOfWork.Patients.GetAll;
 
-    // ================= Pagination Only =================
-    public async Task<List<Patient>> GetPageAsync(PatientQueryDto dto)
-    {
-        return await _unitOfWork.Patients.Query
-            .OrderBy(p => p.Id)
-            .Skip((dto.PageNumber - 1) * dto.PageSize)
-            .Take(dto.PageSize)
-            .ToListAsync();
-    }
+        query = query.WhereIf(!string.IsNullOrEmpty(dto.Search),
+            p => p.Name.Contains(dto.Search));
 
-    // ================= Pagination + Search =================
-    public async Task<List<Patient>> GetPageWithSearchAsync(PatientQueryDto dto)
-    {
-        var query = _unitOfWork.Patients.Query;
+        var mappedQuery = query.OrderBy(p => p.Id)
+            .Select(p => new PatientDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Phone = p.Phone
+            });
 
-        if (!string.IsNullOrEmpty(dto.Search))
-        {
-            query = query.Where(p => p.Name.Contains(dto.Search));
-        }
-
-        return await query
-            .OrderBy(p => p.Id)
-            .Skip((dto.PageNumber - 1) * dto.PageSize)
-            .Take(dto.PageSize)
-            .ToListAsync();
+        return await mappedQuery.ToPagedListAsync(dto.PageNumber, dto.PageSize);
     }
 }

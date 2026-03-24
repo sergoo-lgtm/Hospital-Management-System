@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Model.DTO.DoctorDTOs;
+namespace HospitalManagementSystemAPIVersion.DTO.DoctorDTOs;
 
 public class UpdateDoctorDto
 {

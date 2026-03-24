@@ -1,6 +1,6 @@
-using Hospital_Management_System.Model;
-using Hospital_Management_System.Repository;
-namespace Hospital_Management_System.UnitOfWork;
+using HospitalManagementSystemAPIVersion.Model;
+using HospitalManagementSystemAPIVersion.Repository;
+namespace HospitalManagementSystemAPIVersion.UnitOfWork;
 
 public interface IUnitOfWork
 {
@@ -10,5 +10,4 @@ public interface IUnitOfWork
     IGenericRepository<Prescription> Prescriptions { get; }
     IGenericRepository<Payment>  Payments { get; }
     Task SaveChangesAsync();
-
 }

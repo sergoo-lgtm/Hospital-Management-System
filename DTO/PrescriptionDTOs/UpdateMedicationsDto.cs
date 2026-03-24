@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Model.DTO.PrescriptionDTOs;
+namespace HospitalManagementSystemAPIVersion.DTO.PrescriptionDTOs;
 
 public class UpdateMedicationsDto
 {

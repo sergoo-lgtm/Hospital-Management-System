@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Repository;
+namespace HospitalManagementSystemAPIVersion.Repository;
 
 public interface IGenericRepository<T>
 {
@@ -6,8 +6,6 @@ public interface IGenericRepository<T>
     Task UpdateAsync(T entity);
     Task RemoveAsync(int id);
     Task<T> GetByIdAsync(int id);
-    Task<List<T>> GetAllAsync();
         
-    IQueryable<T> Query { get; }
-
+    IQueryable<T> GetAll { get; }
 }

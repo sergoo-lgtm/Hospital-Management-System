@@ -1,9 +1,8 @@
-using Hospital_Management_System.Model;
-using Hospital_Management_System.Repository;
+using HospitalManagementSystemAPIVersion.Model;
+using HospitalManagementSystemAPIVersion.Repository;
+namespace HospitalManagementSystemAPIVersion.UnitOfWork;
 
-namespace Hospital_Management_System.UnitOfWork;
-
-public class UnitOfWork:IUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
     private readonly HospitalDbContext _context;
     public UnitOfWork(HospitalDbContext context)

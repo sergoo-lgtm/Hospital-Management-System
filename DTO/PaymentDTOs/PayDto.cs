@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Model.DTO.PaymentDTOs;
+namespace HospitalManagementSystemAPIVersion.DTO.PaymentDTOs;
 
 public class PayDto
 {

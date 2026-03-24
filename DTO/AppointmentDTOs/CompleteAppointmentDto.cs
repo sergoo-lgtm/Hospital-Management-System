@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Model.DTO.AppointmentDTOs;
+namespace HospitalManagementSystemAPIVersion.DTO.AppointmentDTOs;
 
 public class CompleteAppointmentDto
 {

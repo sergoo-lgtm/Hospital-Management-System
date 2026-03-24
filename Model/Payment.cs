@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Model;
+namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Payment
 {
@@ -8,28 +8,14 @@ public class Payment
 
     public Appointment Appointment { get; set; }
     public int AppointmentId { get; set; }
-
+    public Payment(int amount, int appointmentId)
+    {
+        SetAmount(amount);
+        AppointmentId = appointmentId;
+        IsPaid = false;
+    }
     private Payment()
     {
-    }
-
-    public Payment(int appointmentId, int amount)
-    {
-        
-        AppointmentId = appointmentId; 
-        Amount = SetAmount(amount);               
-        IsPaid = false;                
-    }
-    
-    public bool Pay(int checkedAppointmentId)
-    {
-        if (checkedAppointmentId != AppointmentId)
-            return false;
-
-        if (!IsPaid)
-            IsPaid = true;
-
-        return IsPaid;
     }
 
     public int SetAmount(int amount)
@@ -42,9 +28,21 @@ public class Payment
         return Amount;
     }
 
+    public bool Pay(int checkedAppointmentId)
+    {
+        
+        if (checkedAppointmentId != AppointmentId)
+            return false;
+
+        if (!IsPaid)
+            IsPaid = true;
+
+        return IsPaid;
+    }
+
     public void UpdateAmount(int Newmount)
     {
         if(!IsPaid){Amount = SetAmount(Newmount); }
     }
+
 }
-    

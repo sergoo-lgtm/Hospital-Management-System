@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Model.DTO.DoctorDTOs;
+namespace HospitalManagementSystemAPIVersion.DTO.DoctorDTOs;
 
 public class DoctorQueryDto
 {
@@ -6,6 +6,5 @@ public class DoctorQueryDto
     public int PageSize { get; set; } = 5;
 
     public string Specialization { get; set; }
-    public string Search { get; set; }
-
+    public string? Search { get; set; }
 }

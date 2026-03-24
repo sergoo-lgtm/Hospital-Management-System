@@ -1,4 +1,4 @@
-namespace Hospital_Management_System.Model;
+namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Doctor
 {
@@ -6,15 +6,33 @@ public class Doctor
     public string Name { get; set; }
     public string Specialization { get; set; }
 
-    public List<Appointment> Appointments { get; private set; } = new List<Appointment>();
-
-    private Doctor() { }
-
+    List<Appointment> Appointments { get; set; }
+    
     public Doctor(string name, string specialization)
     {
         SetProfile(name, specialization);
     }
 
+    private Doctor()
+    {
+        
+    }
+    public void AddAppointment(Appointment appointment)
+    {
+        if (Appointments == null)
+            throw  new Exception("Appointments cannot be null.");
+        if (!Appointments.Contains(appointment)) 
+            Appointments.Add(appointment);
+    }
+
+    public void RemoveAppointment(Appointment appointment)
+    {
+        if (Appointments == null)
+            throw  new Exception("Appointments cannot be null.");
+        if (Appointments.Contains(appointment))
+            if(!Appointments.Contains(appointment)) throw  new Exception("Appointments not Found.");
+        Appointments.Remove(appointment);
+    }
     public void SetProfile(string name, string specialization)
     {
         if (string.IsNullOrEmpty(name)) throw new Exception("Name cannot be null or empty.");
@@ -23,16 +41,4 @@ public class Doctor
         Specialization = specialization;
     }
 
-    public void AddAppointment(Appointment appointment)
-    {
-        if (appointment == null) throw new Exception("Appointment cannot be null.");
-        if (!Appointments.Contains(appointment)) Appointments.Add(appointment);
-    }
-
-    public void RemoveAppointment(Appointment appointment)
-    {
-        if (appointment == null) throw new Exception("Appointment cannot be null.");
-        if (!Appointments.Contains(appointment)) throw new Exception("This appointment does not belong to this doctor.");
-        Appointments.Remove(appointment);
-    }
 }

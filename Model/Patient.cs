@@ -1,15 +1,16 @@
-namespace Hospital_Management_System.Model;
+namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Patient
 {
+    
     public int Id { get; set; }
     public string Name { get; set; }
     public string Phone { get; set; }
-
-    public List<Appointment> Appointments { get; set; } = new List<Appointment>();
-
     private Patient() { }
 
+    
+    List<Appointment> Appointments { get; set; }
+    
     public Patient(string name, string phone)
     {
         SetName(name);
@@ -30,16 +31,22 @@ public class Patient
         Phone = phone;
     }
 
+   
+    
     public void AddAppointment(Appointment appointment)
     {
-        if (appointment == null) throw new Exception("Appointment cannot be null.");
-        if (!Appointments.Contains(appointment)) Appointments.Add(appointment);
+        if (Appointments == null)
+            throw  new Exception("Appointments cannot be null.");
+        if (!Appointments.Contains(appointment)) 
+            Appointments.Add(appointment);
     }
 
     public void RemoveAppointment(Appointment appointment)
     {
-        if (appointment == null) throw new Exception("Appointment cannot be null.");
-        if (!Appointments.Contains(appointment)) throw new Exception("This appointment does not belong to this patient.");
-        Appointments.Remove(appointment);
+        if (Appointments == null)
+            throw  new Exception("Appointments cannot be null.");
+        if (Appointments.Contains(appointment))
+            if(!Appointments.Contains(appointment)) throw  new Exception("Appointments not Found.");
+            Appointments.Remove(appointment);
     }
 }

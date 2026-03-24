@@ -1,8 +1,7 @@
-namespace Hospital_Management_System.Model.DTO.AppointmentDTOs;
+namespace HospitalManagementSystemAPIVersion.DTO.AppointmentDTOs;
 
 public class CreateAppointmentDto
 {
-    
     public int PatientId { get; set; }
     public int DoctorId { get; set; }
     public DateTime Date { get; set; }

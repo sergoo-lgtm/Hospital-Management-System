@@ -1,10 +1,11 @@
-namespace Hospital_Management_System.Model;
+namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Appointment
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }
     public string Status { get; set; }
+    
 
     public int PatientId { get; set; }
     public Patient Patient { get; set; }
@@ -24,6 +25,8 @@ public class Appointment
         UpdateDate(date);
         UpdateStatus(status);
     }
+
+   
 
     public void AssignPatient(Patient patient)
     {
@@ -59,5 +62,4 @@ public class Appointment
     {
         if (prescription == null) throw new ArgumentNullException(nameof(prescription));
         Prescription = prescription;
-    }
-}
+    }}

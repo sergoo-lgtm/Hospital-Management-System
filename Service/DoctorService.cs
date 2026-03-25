@@ -18,6 +18,8 @@ public class DoctorService
 
     public async Task<Doctor> AddAsync(CreateDoctorDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var doctor = new Doctor(dto.Name, dto.Specialization);
         await _unitOfWork.Doctors.AddAsync(doctor);
         await _unitOfWork.SaveChangesAsync();

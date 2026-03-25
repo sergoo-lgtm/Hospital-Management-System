@@ -20,6 +20,8 @@ public class AppointmentService
 
     public async Task<Appointment> AddAsync(CreateAppointmentDto dto)
     {
+        if (dto == null)
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var patient = await _unitOfWork.Patients.GetByIdAsync(dto.PatientId);
         if (patient == null) throw new KeyNotFoundException("Patient not found");
 
@@ -39,6 +41,8 @@ public class AppointmentService
 
     public async Task<Appointment> CompleteAsync(CompleteAppointmentDto dto)
     {
+        if (dto == null)
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
         if (appointment == null) throw new KeyNotFoundException("Appointment not found");
 
@@ -68,6 +72,8 @@ public class AppointmentService
 
     public async Task<PagedResult<Appointment>> GetPageAsync(AppointmentQueryDto dto)
     {
+        if (dto == null)
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var query = _unitOfWork.Appointments.GetAll;
 
         query = query.WhereIf(!string.IsNullOrEmpty(dto.Status),

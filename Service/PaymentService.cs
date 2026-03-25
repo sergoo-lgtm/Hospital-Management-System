@@ -17,6 +17,8 @@ public class PaymentService
 
     public async Task<bool> PayAsync(PayDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var payment = await _unitOfWork.Payments.GetAll
             .FirstOrDefaultAsync(p => p.AppointmentId == dto.AppointmentId);
 
@@ -29,6 +31,8 @@ public class PaymentService
 
     public async Task<Payment> UpdateAmountAsync(UpdatePaymentDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var payment = await _unitOfWork.Payments.GetByIdAsync(dto.PaymentId);
 
         if (payment == null) throw new KeyNotFoundException("Payment not found");

@@ -18,6 +18,8 @@ public class PrescriptionService
 
     public async Task<Prescription> AddAsync(CreatePrescriptionDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
         if (appointment == null) throw new KeyNotFoundException("Appointment not found");
 
@@ -29,6 +31,8 @@ public class PrescriptionService
 
     public async Task<Prescription> UpdateNotesAsync(UpdateNotesDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var prescription = await _unitOfWork.Prescriptions.GetByIdAsync(dto.PrescriptionId);
         if (prescription == null) throw new KeyNotFoundException("Prescription not found");
 
@@ -39,6 +43,8 @@ public class PrescriptionService
 
     public async Task<Prescription> UpdateMedicationsAsync(UpdateMedicationsDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
         var prescription = await _unitOfWork.Prescriptions.GetByIdAsync(dto.PrescriptionId);
         if (prescription == null) throw new KeyNotFoundException("Prescription not found");
 

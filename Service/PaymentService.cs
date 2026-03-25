@@ -15,43 +15,84 @@ public class PaymentService
         _unitOfWork = unitOfWork;
     }
 
+    // الدفع
     public async Task<bool> PayAsync(PayDto dto)
     {
         if (dto == null) 
             throw new ArgumentNullException(nameof(dto), "DTO must be provided");
+
         var payment = await _unitOfWork.Payments.GetAll
             .FirstOrDefaultAsync(p => p.AppointmentId == dto.AppointmentId);
 
-        if (payment == null) throw new KeyNotFoundException("Payment not found");
+        if (payment == null) 
+            throw new KeyNotFoundException("Payment not found");
 
         var result = payment.Pay(dto.AppointmentId);
         await _unitOfWork.SaveChangesAsync();
         return result;
     }
 
-    public async Task<Payment> UpdateAmountAsync(UpdatePaymentDto dto)
+    // تحديث المبلغ
+    public async Task<PaymentDto> UpdateAmountAsync(UpdatePaymentDto dto)
     {
         if (dto == null) 
             throw new ArgumentNullException(nameof(dto), "DTO must be provided");
-        var payment = await _unitOfWork.Payments.GetByIdAsync(dto.PaymentId);
 
-        if (payment == null) throw new KeyNotFoundException("Payment not found");
+        var payment = await _unitOfWork.Payments.GetByIdAsync(dto.PaymentId);
+        if (payment == null) 
+            throw new KeyNotFoundException("Payment not found");
 
         payment.UpdateAmount(dto.NewAmount);
         await _unitOfWork.SaveChangesAsync();
-        return payment;
+
+        return new PaymentDto
+        {
+            Id = payment.Id,
+            AppointmentId = payment.AppointmentId,
+            Amount = payment.Amount,
+            IsPaid = payment.IsPaid
+        };
     }
 
-    public async Task<Payment> GetByIdAsync(int id)
+    // جلب الدفع بالـ Id
+    public async Task<PaymentDto> GetByIdAsync(int id)
     {
         var payment = await _unitOfWork.Payments.GetByIdAsync(id);
-        if (payment == null) throw new KeyNotFoundException("Payment not found");
-        return payment;
+        if (payment == null) 
+            throw new KeyNotFoundException("Payment not found");
+
+        return new PaymentDto
+        {
+            Id = payment.Id,
+            AppointmentId = payment.AppointmentId,
+            Amount = payment.Amount,
+            IsPaid = payment.IsPaid
+        };
     }
 
-    public async Task<PagedResult<Payment>> GetPageAsync(int pageNumber, int pageSize)
+    // Pagination
+    public async Task<PagedResult<PaymentDto>> GetPageAsync(int pageNumber, int pageSize)
     {
-        var query = _unitOfWork.Payments.GetAll.OrderBy(p => p.Id);
-        return await query.ToPagedListAsync(pageNumber, pageSize);
+        var mappedQuery = _unitOfWork.Payments.GetAll
+            .OrderBy(p => p.Id)
+            .Select(p => new PaymentDto
+            {
+                Id = p.Id,
+                AppointmentId = p.AppointmentId,
+                Amount = p.Amount,
+                IsPaid = p.IsPaid
+            });
+
+        var totalCount = await mappedQuery.CountAsync();
+        var items = await mappedQuery
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<PaymentDto>
+        {
+            Items = items,
+            TotalCount = totalCount
+        };
     }
 }

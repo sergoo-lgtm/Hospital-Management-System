@@ -29,6 +29,7 @@ public class PatientService
             Name = patient.Name,
             Phone = patient.Phone
         };
+        
     }
 
     public async Task<PatientDto> GetByIdAsync(int id)
@@ -59,12 +60,9 @@ public class PatientService
 
     public async Task<PagedResult<PatientDto>> GetPageAsync(PatientQueryDto dto)
     {
-        var query = _unitOfWork.Patients.GetAll;
-
-        query = query.WhereIf(!string.IsNullOrEmpty(dto.Search),
-            p => p.Name.Contains(dto.Search));
-
-        var mappedQuery = query.OrderBy(p => p.Id)
+        var mappedQuery = _unitOfWork.Patients.GetAll
+            .WhereIf(!string.IsNullOrEmpty(dto.Search), p => p.Name.Contains(dto.Search))
+            .OrderBy(p => p.Id)
             .Select(p => new PatientDto
             {
                 Id = p.Id,
@@ -72,6 +70,17 @@ public class PatientService
                 Phone = p.Phone
             });
 
-        return await mappedQuery.ToPagedListAsync(dto.PageNumber, dto.PageSize);
+        var totalCount = await mappedQuery.CountAsync();
+        var items = await mappedQuery
+            .Skip((dto.PageNumber - 1) * dto.PageSize)
+            .Take(dto.PageSize)
+            .ToListAsync();
+
+        return new PagedResult<PatientDto>
+        {
+            Items = items,
+            TotalCount = totalCount
+        };
     }
+    
 }

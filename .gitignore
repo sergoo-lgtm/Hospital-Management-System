@@ -1,0 +1,9 @@
+# Visual Studio / Rider / .NET
+bin/
+obj/
+*.user
+*.suo
+*.tmp
+*.DS_Store
+.idea/
+.vscode/

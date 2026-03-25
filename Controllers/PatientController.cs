@@ -3,7 +3,6 @@ using HospitalManagementSystemAPIVersion.DTO.PatientDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManagementSystemAPIVersion.Controllers;
-
 [ApiController]
 [Route("api/[controller]")]
 public class PatientController : ControllerBase
@@ -15,7 +14,7 @@ public class PatientController : ControllerBase
         _patientService = patientService;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> Add([FromBody] CreatePatientDto dto)
     {
         var patient = await _patientService.AddAsync(dto);
@@ -29,14 +28,14 @@ public class PatientController : ControllerBase
         return Ok(patient);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _patientService.DeleteAsync(id);
         return NoContent();
     }
 
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<IActionResult> GetPage([FromQuery] PatientQueryDto dto)
     {
         var result = await _patientService.GetPageAsync(dto);

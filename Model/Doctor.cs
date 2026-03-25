@@ -2,15 +2,17 @@ namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Doctor
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Specialization { get; set; }
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public string Specialization { get; private set; }
 
-    List<Appointment> Appointments { get; set; }
+    public List<Appointment> Appointments { get; private set; }
     
     public Doctor(string name, string specialization)
     {
         SetProfile(name, specialization);
+        Appointments = new List<Appointment>(); 
+
     }
 
     private Doctor()
@@ -26,11 +28,12 @@ public class Doctor
     }
 
     public void RemoveAppointment(Appointment appointment)
-    {
-        if (Appointments == null)
-            throw  new Exception("Appointments cannot be null.");
-        if (Appointments.Contains(appointment))
-            if(!Appointments.Contains(appointment)) throw  new Exception("Appointments not Found.");
+    {if (Appointments == null)
+            throw new Exception("Appointments cannot be null.");
+
+        if (!Appointments.Contains(appointment))
+            throw new Exception("Appointment not found.");
+
         Appointments.Remove(appointment);
     }
     public void SetProfile(string name, string specialization)

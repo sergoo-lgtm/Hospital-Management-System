@@ -2,12 +2,12 @@ namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Payment
 {
-    public int Id { get; set; }
-    public bool IsPaid { get; set; }
-    public int Amount { get; set; }
+    public int Id { get; private set; }
+    public bool IsPaid { get; private set; }
+    public int Amount { get; private set; }
 
-    public Appointment Appointment { get; set; }
-    public int AppointmentId { get; set; }
+    public Appointment Appointment { get; private set; }
+    public int AppointmentId { get; private set; }
     public Payment(int amount, int appointmentId)
     {
         SetAmount(amount);

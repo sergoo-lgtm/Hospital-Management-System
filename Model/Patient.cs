@@ -3,18 +3,20 @@ namespace HospitalManagementSystemAPIVersion.Model;
 public class Patient
 {
     
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Phone { get; set; }
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public string Phone { get; private set; }
     private Patient() { }
 
     
-    List<Appointment> Appointments { get; set; }
+    public List<Appointment> Appointments { get; private set; }
     
     public Patient(string name, string phone)
     {
         SetName(name);
         SetPhone(phone);
+        Appointments = new List<Appointment>(); 
+
     }
 
     public void SetName(string name)
@@ -44,9 +46,11 @@ public class Patient
     public void RemoveAppointment(Appointment appointment)
     {
         if (Appointments == null)
-            throw  new Exception("Appointments cannot be null.");
-        if (Appointments.Contains(appointment))
-            if(!Appointments.Contains(appointment)) throw  new Exception("Appointments not Found.");
-            Appointments.Remove(appointment);
+            throw new Exception("Appointments cannot be null.");
+
+        if (!Appointments.Contains(appointment))
+            throw new Exception("Appointment not found.");
+
+        Appointments.Remove(appointment);
     }
 }

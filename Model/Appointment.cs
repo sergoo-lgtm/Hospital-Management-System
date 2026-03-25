@@ -2,19 +2,19 @@ namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Appointment
 {
-    public int Id { get; set; }
-    public DateTime Date { get; set; }
-    public string Status { get; set; }
+    public int Id { get; private set; }
+    public DateTime Date { get; private set; }
+    public string Status { get; private set; }
     
 
-    public int PatientId { get; set; }
-    public Patient Patient { get; set; }
+    public int PatientId { get; private set; }
+    public Patient Patient { get; private set; }
 
-    public int DoctorId { get; set; }
-    public Doctor Doctor { get; set; }
+    public int DoctorId { get; private set; }
+    public Doctor Doctor { get; private set; }
 
-    public Payment Payment { get; set; }
-    public Prescription Prescription { get; set; }
+    public Payment Payment { get; private set; }
+    public Prescription Prescription { get;private  set; }
 
     private Appointment() { }
 

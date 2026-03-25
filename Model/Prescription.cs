@@ -2,11 +2,11 @@ namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Prescription
 {
-    public int Id { get;  set; }  
-    public string Notes { get; set; }
-    public string Medications { get; set; }
-    public int AppointmentId { get; set; }
-    public Appointment Appointment { get; set; }
+    public int Id { get;  private set; }  
+    public string Notes { get; private set; }
+    public string Medications { get; private set; }
+    public int AppointmentId { get; private set; }
+    public Appointment Appointment { get; private set; }
 
     private Prescription()
     {

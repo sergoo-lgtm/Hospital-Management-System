@@ -11,14 +11,8 @@ public class HospitalDbContext : DbContext
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Prescription> Prescriptions { get; set; }
+    
 
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(
-            "Server=localhost,1433;Database=HospitalManagementSystemAPIDB;User Id=sa;Password=Yosuef@2026;TrustServerCertificate=True;"
-        );
-    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);

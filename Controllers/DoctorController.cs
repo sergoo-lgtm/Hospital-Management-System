@@ -15,28 +15,28 @@ public class DoctorController : ControllerBase
         _doctorService = doctorService;
     }
 
-    [HttpPost]
+    [HttpPost("add")]
     public async Task<IActionResult> Add([FromBody] CreateDoctorDto dto)
     {
         var doctor = await _doctorService.AddAsync(dto);
         return Ok(doctor);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("get/{id}")]
     public async Task<IActionResult> GetById(int id)
     {
         var doctor = await _doctorService.GetByIdAsync(id);
         return Ok(doctor);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _doctorService.DeleteAsync(id);
         return NoContent();
     }
 
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<IActionResult> GetPage([FromQuery] DoctorQueryDto dto)
     {
         var result = await _doctorService.GetPageAsync(dto);

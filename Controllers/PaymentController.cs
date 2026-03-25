@@ -1,6 +1,5 @@
 using HospitalManagementSystemAPIVersion.Service;
 using HospitalManagementSystemAPIVersion.DTO.PaymentDTOs;
-using HospitalManagementSystemAPIVersion.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManagementSystemAPIVersion.Controllers;
@@ -30,14 +29,14 @@ public class PaymentController : ControllerBase
         return Ok(updatedPayment);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("get/{id}")]
     public async Task<IActionResult> GetById(int id)
     {
         var payment = await _paymentService.GetByIdAsync(id);
         return Ok(payment);
     }
 
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<IActionResult> GetPage([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         var pagedPayments = await _paymentService.GetPageAsync(pageNumber, pageSize);

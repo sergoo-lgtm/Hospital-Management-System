@@ -24,14 +24,14 @@ public class Patient
 
     public void SetName(string name)
     {
-        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name cannot be null or empty.");
+        if (string.IsNullOrEmpty(name)) throw new BusinessException("Name cannot be null or empty.");
         Name = name;
     }
 
     public void SetPhone(string phone)
     {
         if (string.IsNullOrEmpty(phone) || phone.Length != 11 || !phone.All(char.IsDigit))
-            throw new ArgumentException("Invalid phone number. Must be 11 digits.");
+            throw new BusinessException("Invalid phone number. Must be 11 digits.");
 
         Phone = phone;
     }
@@ -41,7 +41,7 @@ public class Patient
     public void AddAppointment(Appointment appointment)
     {
         if (Appointments == null)
-            throw  new BusinessException("Appointments cannot be null.");
+            throw  new ArgumentNullException("Appointments cannot be null.");
         if (!Appointments.Contains(appointment)) 
             Appointments.Add(appointment);
     }
@@ -49,7 +49,7 @@ public class Patient
     public void RemoveAppointment(Appointment appointment)
     {
         if (Appointments == null)
-            throw new BusinessException("Appointments cannot be null.");
+            throw new ArgumentNullException("Appointments cannot be null.");
 
         if (!Appointments.Contains(appointment))
             throw new NotFoundException("Appointment not found.");

@@ -15,35 +15,36 @@ public class AppointmentController : ControllerBase
         _appointmentService = appointmentService;
     }
 
-    [HttpPost]
+    [HttpPost("add")]
     public async Task<IActionResult> Add([FromBody] CreateAppointmentDto dto)
     {
         var appointment = await _appointmentService.AddAsync(dto);
         return Ok(appointment);
     }
 
-    [HttpPost("complete")]
-    public async Task<IActionResult> Complete([FromBody] CompleteAppointmentDto dto)
+    [HttpPut("{id}/complete")]
+    public async Task<IActionResult> Complete(int id, [FromBody] CompleteAppointmentDto dto)
     {
+        dto.AppointmentId = id; 
         var completed = await _appointmentService.CompleteAsync(dto);
         return Ok(completed);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("get/{id}")]
     public async Task<IActionResult> GetById(int id)
     {
         var appointment = await _appointmentService.GetByIdAsync(id);
         return Ok(appointment);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _appointmentService.DeleteAsync(id);
         return NoContent();
     }
 
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<IActionResult> GetPage([FromQuery] AppointmentQueryDto dto)
     {
         var result = await _appointmentService.GetPageAsync(dto);

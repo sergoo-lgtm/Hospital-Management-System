@@ -1,3 +1,5 @@
+using HospitalManagementSystemAPIVersion.CustomExceptions;
+
 namespace HospitalManagementSystemAPIVersion.Model;
 
 public class Doctor
@@ -22,24 +24,24 @@ public class Doctor
     public void AddAppointment(Appointment appointment)
     {
         if (Appointments == null)
-            throw  new Exception("Appointments cannot be null.");
+            throw  new ArgumentNullException("Appointments cannot be null.");
         if (!Appointments.Contains(appointment)) 
             Appointments.Add(appointment);
     }
 
     public void RemoveAppointment(Appointment appointment)
     {if (Appointments == null)
-            throw new Exception("Appointments cannot be null.");
+            throw new ArgumentNullException("Appointments cannot be null.");
 
         if (!Appointments.Contains(appointment))
-            throw new Exception("Appointment not found.");
+            throw new NotFoundException("Appointment not found.");
 
         Appointments.Remove(appointment);
     }
     public void SetProfile(string name, string specialization)
     {
-        if (string.IsNullOrEmpty(name)) throw new Exception("Name cannot be null or empty.");
-        if (string.IsNullOrEmpty(specialization)) throw new Exception("Specialization cannot be null or empty.");
+        if (string.IsNullOrEmpty(name)) throw new BusinessException("Name cannot be null or empty.");
+        if (string.IsNullOrEmpty(specialization)) throw new BusinessException("Specialization cannot be null or empty.");
         Name = name;
         Specialization = specialization;
     }

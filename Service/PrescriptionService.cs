@@ -1,7 +1,6 @@
 using HospitalManagementSystemAPIVersion.Model;
 using HospitalManagementSystemAPIVersion.DTO.PrescriptionDTOs;
 using HospitalManagementSystemAPIVersion.DTO;
-
 using HospitalManagementSystemAPIVersion.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,62 +15,119 @@ public class PrescriptionService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Prescription> AddAsync(CreatePrescriptionDto dto)
+    public async Task<PrescriptionDto> AddAsync(CreatePrescriptionDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
+
         var appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
-        if (appointment == null) throw new KeyNotFoundException("Appointment not found");
+        if (appointment == null) 
+            throw new KeyNotFoundException("Appointment not found");
 
         var prescription = new Prescription(appointment, dto.Notes, dto.Medications);
         await _unitOfWork.Prescriptions.AddAsync(prescription);
         await _unitOfWork.SaveChangesAsync();
-        return prescription;
+
+        return new PrescriptionDto
+        {
+            Id = prescription.Id,
+            AppointmentId = prescription.AppointmentId,
+            Notes = prescription.Notes,
+            Medications = prescription.Medications
+        };
     }
 
-    public async Task<Prescription> UpdateNotesAsync(UpdateNotesDto dto)
+    public async Task<PrescriptionDto> UpdateNotesAsync(UpdateNotesDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
+
         var prescription = await _unitOfWork.Prescriptions.GetByIdAsync(dto.PrescriptionId);
-        if (prescription == null) throw new KeyNotFoundException("Prescription not found");
+        if (prescription == null) 
+            throw new KeyNotFoundException("Prescription not found");
 
         prescription.SetNotes(dto.Notes);
         await _unitOfWork.SaveChangesAsync();
-        return prescription;
+
+        return new PrescriptionDto
+        {
+            Id = prescription.Id,
+            AppointmentId = prescription.AppointmentId,
+            Notes = prescription.Notes,
+            Medications = prescription.Medications
+        };
     }
 
-    public async Task<Prescription> UpdateMedicationsAsync(UpdateMedicationsDto dto)
+    public async Task<PrescriptionDto> UpdateMedicationsAsync(UpdateMedicationsDto dto)
     {
+        if (dto == null) 
+            throw new ArgumentNullException(nameof(dto), "DTO must be provided");
+
         var prescription = await _unitOfWork.Prescriptions.GetByIdAsync(dto.PrescriptionId);
-        if (prescription == null) throw new KeyNotFoundException("Prescription not found");
+        if (prescription == null) 
+            throw new KeyNotFoundException("Prescription not found");
 
         prescription.SetMedications(dto.Medications);
         await _unitOfWork.SaveChangesAsync();
-        return prescription;
+
+        return new PrescriptionDto
+        {
+            Id = prescription.Id,
+            AppointmentId = prescription.AppointmentId,
+            Notes = prescription.Notes,
+            Medications = prescription.Medications
+        };
     }
 
     public async Task DeleteAsync(int id)
     {
         var prescription = await _unitOfWork.Prescriptions.GetByIdAsync(id);
-        if (prescription == null) throw new KeyNotFoundException("Prescription not found");
+        if (prescription == null) 
+            throw new KeyNotFoundException("Prescription not found");
 
         await _unitOfWork.Prescriptions.RemoveAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<Prescription> GetByIdAsync(int id)
+    public async Task<PrescriptionDto> GetByIdAsync(int id)
     {
         var prescription = await _unitOfWork.Prescriptions.GetByIdAsync(id);
-        if (prescription == null) throw new KeyNotFoundException("Prescription not found");
-        return prescription;
+        if (prescription == null) 
+            throw new KeyNotFoundException("Prescription not found");
+
+        return new PrescriptionDto
+        {
+            Id = prescription.Id,
+            AppointmentId = prescription.AppointmentId,
+            Notes = prescription.Notes,
+            Medications = prescription.Medications
+        };
     }
 
-    public async Task<PagedResult<Prescription>> GetPageAsync(int pageNumber, int pageSize, string? search = null)
+    public async Task<PagedResult<PrescriptionDto>> GetPageAsync(int pageNumber, int pageSize, string? search = null)
     {
-        var query = _unitOfWork.Prescriptions.GetAll;
+        var mappedQuery = _unitOfWork.Prescriptions.GetAll
+            .WhereIf(!string.IsNullOrEmpty(search),
+                p => p.Notes.Contains(search) || p.Medications.Contains(search))
+            .OrderBy(p => p.Id)
+            .Select(p => new PrescriptionDto
+            {
+                Id = p.Id,
+                AppointmentId = p.AppointmentId,
+                Notes = p.Notes,
+                Medications = p.Medications
+            });
 
-        query = query.WhereIf(!string.IsNullOrEmpty(search),
-            p => p.Notes.Contains(search) || p.Medications.Contains(search));
+        var totalCount = await mappedQuery.CountAsync();
+        var items = await mappedQuery
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
-        query = query.OrderBy(p => p.Id);
-
-        return await query.ToPagedListAsync(pageNumber, pageSize);
+        return new PagedResult<PrescriptionDto>
+        {
+            Items = items,
+            TotalCount = totalCount
+        };
     }
 }

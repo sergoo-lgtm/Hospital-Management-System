@@ -15,7 +15,7 @@ public class PrescriptionController : ControllerBase
         _prescriptionService = prescriptionService;
     }
 
-    [HttpPost]
+    [HttpPost("add")]
     public async Task<IActionResult> Add([FromBody] CreatePrescriptionDto dto)
     {
         var prescription = await _prescriptionService.AddAsync(dto);
@@ -36,21 +36,21 @@ public class PrescriptionController : ControllerBase
         return Ok(updated);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _prescriptionService.DeleteAsync(id);
         return NoContent();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("get/{id}")]
     public async Task<IActionResult> GetById(int id)
     {
         var prescription = await _prescriptionService.GetByIdAsync(id);
         return Ok(prescription);
     }
 
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<IActionResult> GetPage([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
     {
         var result = await _prescriptionService.GetPageAsync(pageNumber, pageSize, search);

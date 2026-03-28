@@ -1,3 +1,4 @@
+using HospitalManagementSystemAPIVersion.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagementSystemAPIVersion.Model;
@@ -86,5 +87,6 @@ public class HospitalDbContext : DbContext
         new { Id = 9, AppointmentId = 9, Notes = "Patient has migraine", Medications = "Painkiller" },
         new { Id = 10, AppointmentId = 10, Notes = "Patient has infection", Medications = "Antibiotic" }
     );
+    modelBuilder.Entity<DashboardDto>().HasNoKey();
 }
 }

@@ -1,5 +1,7 @@
 using HospitalManagementSystemAPIVersion.Model;
 using HospitalManagementSystemAPIVersion.Repository;
+using Microsoft.EntityFrameworkCore;
+
 namespace HospitalManagementSystemAPIVersion.UnitOfWork;
 
 public interface IUnitOfWork
@@ -9,5 +11,6 @@ public interface IUnitOfWork
     IGenericRepository<Appointment> Appointments { get; }
     IGenericRepository<Prescription> Prescriptions { get; }
     IGenericRepository<Payment>  Payments { get; }
+
     Task SaveChangesAsync();
 }

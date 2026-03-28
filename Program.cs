@@ -22,7 +22,7 @@ builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<PrescriptionService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+builder.Services.AddScoped<DashboardService>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 

@@ -1,5 +1,7 @@
 using HospitalManagementSystemAPIVersion.Model;
 using HospitalManagementSystemAPIVersion.Repository;
+using Microsoft.EntityFrameworkCore;
+
 namespace HospitalManagementSystemAPIVersion.UnitOfWork;
 
 public class UnitOfWork : IUnitOfWork
@@ -14,6 +16,7 @@ public class UnitOfWork : IUnitOfWork
         Appointments = new GenericRepository<Appointment>(_context);
         Prescriptions = new GenericRepository<Prescription>(_context);
         Payments = new GenericRepository<Payment>(_context);
+        
     }
     public IGenericRepository<Patient> Patients { get; }
     public IGenericRepository<Doctor> Doctors { get; }

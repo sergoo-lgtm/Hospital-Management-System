@@ -88,5 +88,6 @@ public class HospitalDbContext : DbContext
         new { Id = 10, AppointmentId = 10, Notes = "Patient has infection", Medications = "Antibiotic" }
     );
     modelBuilder.Entity<DashboardDto>().HasNoKey();
+    modelBuilder.Entity<AppointmentDetailsDto>().HasNoKey();
 }
 }

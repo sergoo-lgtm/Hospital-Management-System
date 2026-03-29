@@ -12,6 +12,7 @@ public class HospitalDbContext : DbContext
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Prescription> Prescriptions { get; set; }
+    public DbSet<AppointmentDetailsDto> AppointmentDetailsDto { get; set; }
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -88,5 +89,11 @@ public class HospitalDbContext : DbContext
         new { Id = 10, AppointmentId = 10, Notes = "Patient has infection", Medications = "Antibiotic" }
     );
     modelBuilder.Entity<DashboardDto>().HasNoKey();
+    modelBuilder.Entity<AppointmentDetailsDto>(A =>
+    {
+        A.HasNoKey();
+        A.ToView("vw_AppointmentDetails");
+    });
+    
 }
 }

@@ -13,13 +13,10 @@ public class AppointmentViewService
         _context = context;
     }
 
-    public List<AppointmentDetailsDto> GetAppointmentDetails()
-    {
-        var result = _context.Set<AppointmentDetailsDto>()
-            .FromSqlRaw("SELECT * FROM vw_AppointmentDetails")
-            .AsNoTracking()
-            .ToList();
-
+     public List<AppointmentDetailsDto> GetAppointmentDetails()
+     {
+         var result = _context.AppointmentDetailsDto.AsNoTracking().ToList();
+    
         return result;
-    }
+     }
 }

@@ -15,12 +15,12 @@ namespace HospitalManagementSystemAPIVersion.Controllers
             _service = service;
         }
 
-        [HttpGet("details")]
-        public IActionResult GetAppointmentDetails()
-        {
-            var result = _service.GetAppointmentDetails();
-            return Ok(result);
-        }
+         [HttpGet("details")]
+         public IActionResult GetAppointmentDetails()
+         {
+             var result = _service.GetAppointmentDetails();
+             return Ok(result);
+         }
     }
         
         

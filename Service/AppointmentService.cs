@@ -33,7 +33,8 @@ public class AppointmentService
 
         await _unitOfWork.Appointments.AddAsync(appointment);
         await _unitOfWork.SaveChangesAsync();
-
+        await Proxy.EmailProxy.SendAppointmentEmail(patient, appointment);
+        
         return new AppointmentDto
         {
             Id = appointment.Id,

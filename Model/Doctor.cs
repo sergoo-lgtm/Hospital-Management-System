@@ -24,7 +24,9 @@ public class Doctor
     public void AddAppointment(Appointment appointment)
     {
         if (Appointments == null)
-            throw  new ArgumentNullException("Appointments cannot be null.");
+            Appointments = new List<Appointment>();
+
+            //throw  new ArgumentNullException("Appointments cannot be null.");
         if (!Appointments.Contains(appointment)) 
             Appointments.Add(appointment);
     }

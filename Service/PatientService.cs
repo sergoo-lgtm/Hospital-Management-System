@@ -18,7 +18,9 @@ public class PatientService
 
     public async Task<PatientDto> AddAsync(CreatePatientDto dto)
     {
-        var patient = new Patient(dto.Name, dto.Phone);
+        if (dto == null)
+            throw new ArgumentNullException(nameof(dto));
+        var patient = new Patient(dto.Name, dto.Phone, dto.Email);
 
         await _unitOfWork.Patients.AddAsync(patient);
         await _unitOfWork.SaveChangesAsync();
@@ -27,7 +29,8 @@ public class PatientService
         {
             Id = patient.Id,
             Name = patient.Name,
-            Phone = patient.Phone
+            Phone = patient.Phone,
+            Email = patient.Email
         };
         
     }
@@ -43,7 +46,8 @@ public class PatientService
         {
             Id = patient.Id,
             Name = patient.Name,
-            Phone = patient.Phone
+            Phone = patient.Phone,
+            Email = patient.Email
         };
     }
 
@@ -67,7 +71,7 @@ public class PatientService
             {
                 Id = p.Id,
                 Name = p.Name,
-                Phone = p.Phone
+                Phone = p.Phone,
             });
 
         var totalCount = await mappedQuery.CountAsync();

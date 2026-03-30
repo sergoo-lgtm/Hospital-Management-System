@@ -1,5 +1,6 @@
 
 using HospitalManagementSystemAPIVersion.CustomExceptions;
+using System.Text.RegularExpressions;
 
 namespace HospitalManagementSystemAPIVersion.Model;
 
@@ -9,17 +10,34 @@ public class Patient
     public int Id { get; private set; }
     public string Name { get; private set; }
     public string Phone { get; private set; }
+    
+    public string Email { get; private set; }
     private Patient() { }
 
+
+    public List<Appointment> Appointments { get; private set; } = new();
     
-    public List<Appointment> Appointments { get; private set; }
-    
-    public Patient(string name, string phone)
+    public Patient(string name, string phone,  string email)
     {
         SetName(name);
         SetPhone(phone);
+        SetEmail(email);
         Appointments = new List<Appointment>(); 
 
+    }
+
+
+    private void SetEmail(string email)
+    {
+        if (string.IsNullOrEmpty(email))
+            throw new BusinessException("Email cannot be null or empty.");
+
+        var pattern = @"^[^@\s]+@[^@\s]+\.com$";
+
+        if (!Regex.IsMatch(email, pattern))
+            throw new BusinessException("Invalid email format.");
+
+        Email = email;
     }
 
     public void SetName(string name)
@@ -41,9 +59,8 @@ public class Patient
     public void AddAppointment(Appointment appointment)
     {
         if (Appointments == null)
-            Appointments = new List<Appointment>();
+            throw new ArgumentNullException("Appointments cannot be null.");
 
-            //throw  new ArgumentNullException("Appointments cannot be null.");
         if (!Appointments.Contains(appointment)) 
             Appointments.Add(appointment);
     }

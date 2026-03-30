@@ -2,7 +2,7 @@ using HospitalManagementSystemAPIVersion.Service;
 using Microsoft.EntityFrameworkCore;
 using HospitalManagementSystemAPIVersion.Model;
 using HospitalManagementSystemAPIVersion.CustomExceptions;
-
+using HospitalManagementSystemAPIVersion.Proxy;
 using HospitalManagementSystemAPIVersion.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +15,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<HospitalDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("myconnection"))
 );
-
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<PatientService>();
 builder.Services.AddScoped<DoctorService>();
 builder.Services.AddScoped<AppointmentService>();

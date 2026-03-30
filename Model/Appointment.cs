@@ -32,7 +32,6 @@ public class Appointment
     {
         if (patient == null) throw new ArgumentNullException(nameof(patient));
         Patient = patient;
-        PatientId = patient.Id;
         patient.AddAppointment(this);
     }
 

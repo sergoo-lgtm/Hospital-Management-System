@@ -2,6 +2,7 @@ using HospitalManagementSystemAPIVersion.Model;
 using HospitalManagementSystemAPIVersion.DTO.AppointmentDTOs;
 using HospitalManagementSystemAPIVersion.DTO;
 using HospitalManagementSystemAPIVersion.DTO.PaymentDTOs;
+using HospitalManagementSystemAPIVersion.Proxy;
 using HospitalManagementSystemAPIVersion.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,14 @@ namespace HospitalManagementSystemAPIVersion.Service;
 public class AppointmentService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IEmailService _emailService;
 
-    public AppointmentService(IUnitOfWork unitOfWork)
+
+    public AppointmentService(IUnitOfWork unitOfWork , IEmailService emailService)
     {
         _unitOfWork = unitOfWork;
+        _emailService = emailService;
+
     }
 
     public async Task<AppointmentDto> AddAsync(CreateAppointmentDto dto)
@@ -33,7 +38,23 @@ public class AppointmentService
 
         await _unitOfWork.Appointments.AddAsync(appointment);
         await _unitOfWork.SaveChangesAsync();
+        
+        if (!string.IsNullOrEmpty(patient.Email))
+        {
+            string emailBody = $@"
+            <h3>Appointment Confirmation</h3>
+            <p>Hi {patient.Name},</p>
+            <p>Your appointment with Dr. {doctor.Name} is scheduled on <strong>{appointment.Date:dddd, dd MMM yyyy HH:mm}</strong>.</p>
+            <p>Thank you for using our Hospital Management System.</p>
+        ";
 
+            await _emailService.SendAsync(
+                patient.Email,     
+                "Appointment Confirmed",
+                emailBody
+            );
+        }
+        
         return new AppointmentDto
         {
             Id = appointment.Id,

@@ -15,7 +15,7 @@ public class Patient
     private Patient() { }
 
 
-    public List<Appointment> Appointments { get; private set; } = new();
+    public List<Appointment> Appointments { get; private set; } 
     
     public Patient(string name, string phone,  string email)
     {
@@ -59,7 +59,7 @@ public class Patient
     public void AddAppointment(Appointment appointment)
     {
         if (Appointments == null)
-            throw new ArgumentNullException("Appointments cannot be null.");
+            Appointments = new List<Appointment>();
 
         if (!Appointments.Contains(appointment)) 
             Appointments.Add(appointment);

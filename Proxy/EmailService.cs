@@ -9,7 +9,6 @@ namespace HospitalManagementSystemAPIVersion.Proxy
     {
         private readonly EmailSettings _settings;
 
-        // ناخد الإعدادات من DI
         public EmailService(IOptions<EmailSettings> settings)
         {
             _settings = settings.Value;

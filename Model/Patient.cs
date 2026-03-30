@@ -32,7 +32,7 @@ public class Patient
         if (string.IsNullOrEmpty(email))
             throw new BusinessException("Email cannot be null or empty.");
 
-        var pattern = @"^[^@\s]+@[^@\s]+\.com$";
+        var pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";;
 
         if (!Regex.IsMatch(email, pattern))
             throw new BusinessException("Invalid email format.");

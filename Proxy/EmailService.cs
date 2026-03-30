@@ -1,38 +1,36 @@
-using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
+using HospitalManagementSystemAPIVersion.Proxy;
 
-namespace HospitalManagementSystemAPIVersion.Proxy
+public class EmailService : IEmailService
 {
-    public class EmailService : IEmailService
+    private readonly EmailSettings _settings;
+
+    public EmailService(IOptions<EmailSettings> settings)
     {
-        private readonly EmailSettings _settings;
+        _settings = settings.Value;
+    }
 
-        public EmailService(IOptions<EmailSettings> settings)
+    public async Task SendAsync(string to, string subject, string body)
+    {
+        using var client = new SmtpClient(_settings.Host, _settings.Port)
         {
-            _settings = settings.Value;
-        }
+            Credentials = new NetworkCredential(_settings.Email, _settings.Password),
+            EnableSsl = _settings.EnableSsl
+        };
 
-        public async Task SendAsync(string to, string subject, string body)
+        using var mail = new MailMessage
         {
-            using var client = new SmtpClient("smtp.gmail.com", 587)
-            {
-                Credentials = new NetworkCredential(_settings.Email, _settings.Password),
-                EnableSsl = true
-            };
+            From = new MailAddress(_settings.Email),
+            Subject = subject,
+            Body = body,
+            IsBodyHtml = true
+        };
 
-            using var mail = new MailMessage
-            {
-                From = new MailAddress(_settings.Email),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            };
+        mail.To.Add(to);
 
-            mail.To.Add(to);
-
-            await client.SendMailAsync(mail);
-        }
+        await client.SendMailAsync(mail);
     }
 }
